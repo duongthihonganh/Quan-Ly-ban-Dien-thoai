@@ -35,6 +35,7 @@ Quản lý Sản phẩm (Kho hàng)
 Quản lý Đơn hàng (Duyệt đơn)
 Quản lý Khuyến mãi (Tạo mã giảm giá)
 Dashboard (Xem doanh thu, sản phẩm bán chạy)
+```
 Customer Flow:
 ```
 Đăng ký / Đăng nhập
