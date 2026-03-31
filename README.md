@@ -1,8 +1,7 @@
 # Quan-Ly-ban-Dien-thoai
 Chi tiết Kế hoạch (Proposed Changes)
 Dự án sẽ được khởi tạo trong thư mục C:\btl (môi trường máy tính của bạn).
-
-* 1. Cấu trúc thư mục Maven *
+##1. Cấu trúc thư mục Maven *
 Sử dụng công cụ để khởi tạo pom.xml bao gồm thư viện mysql-connector-java.
 
 *2. Database (XAMPP / MySQL)
