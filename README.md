@@ -15,6 +15,7 @@ orders (id, user_id, total_amount, status, created_at, shipping_address)
 order_items (id, order_id, product_id, quantity, price)
 promotions (id, code, discount_percent, is_active)
 (Giỏ hàng có thể xử lý in-memory khi user đang thao tác, hoặc lưu vào database)
+```
 ## 3. Phân chia thư mục mã nguồn (Packages)
 Kiến trúc phần mềm sẽ bao gồm các tầng (Layer):
 
