@@ -37,7 +37,7 @@ Quản lý Khuyến mãi (Tạo mã giảm giá)
 Dashboard (Xem doanh thu, sản phẩm bán chạy)
 ```
 Customer Flow:
-```
+
 Đăng ký / Đăng nhập
 Khám phá (Tìm kiếm, xem sản phẩm, đánh giá)
 Mua sắm (Thêm vào giỏ hàng, đặt hàng với địa chỉ)
