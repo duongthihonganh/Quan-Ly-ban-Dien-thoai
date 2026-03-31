@@ -18,23 +18,24 @@ promotions (id, code, discount_percent, is_active)
 ```
 ## 3. Phân chia thư mục mã nguồn (Packages)
 Kiến trúc phần mềm sẽ bao gồm các tầng (Layer):
-
+```
 model: Chứa các lớp thực thể (User, Product, Brand, Order...)
 dao (Data Access Object): Xử lý các câu lệnh SQL INSERT/UPDATE/SELECT...
 service: Chứa logic nghiệp vụ (Kiểm tra đăng nhập, xác nhận mua hàng...)
 view: Giao diện Console (Menu hiển thị chữ, nhận ký tự nhập từ Scanner), bao gồm Menu Admin và Menu Customer.
 utils: File cấu hình kết nối Database (DBConnection).
+```
 ## 4. Lộ trình Triển khai Code
 Chúng ta sẽ cài đặt tất cả 12 usecase qua các Views: 
 Admin Flow:
-
+```
 Quản lý Thương hiệu (Brands)
 Quản lý Sản phẩm (Kho hàng)
 Quản lý Đơn hàng (Duyệt đơn)
 Quản lý Khuyến mãi (Tạo mã giảm giá)
 Dashboard (Xem doanh thu, sản phẩm bán chạy)
 Customer Flow:
-
+```
 Đăng ký / Đăng nhập
 Khám phá (Tìm kiếm, xem sản phẩm, đánh giá)
 Mua sắm (Thêm vào giỏ hàng, đặt hàng với địa chỉ)
