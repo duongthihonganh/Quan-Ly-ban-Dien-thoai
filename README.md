@@ -7,7 +7,7 @@ Sử dụng công cụ để khởi tạo pom.xml bao gồm thư viện mysql-co
 ## 2. Database (XAMPP / MySQL)
 Tạo file database/schema.sql với các bảng cần thiết:
 
-users (id, username, password, role)
+  users (id, username, password, role)
 brands (id, name)
 products (id, brand_id, name, price, stock, is_active)
 reviews (id, user_id, product_id, comment, created_at)
