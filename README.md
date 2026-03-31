@@ -27,8 +27,9 @@ utils: File cấu hình kết nối Database (DBConnection).
 ```
 ## 4. Lộ trình Triển khai Code
 Chúng ta sẽ cài đặt tất cả 12 usecase qua các Views: 
-Admin Flow:
 ```
+Admin Flow:
+
 Quản lý Thương hiệu (Brands)
 Quản lý Sản phẩm (Kho hàng)
 Quản lý Đơn hàng (Duyệt đơn)
