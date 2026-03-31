@@ -1,10 +1,10 @@
 # Quan-Ly-ban-Dien-thoai
 Chi tiết Kế hoạch (Proposed Changes)
 Dự án sẽ được khởi tạo trong thư mục C:\btl (môi trường máy tính của bạn).
-## 1. Cấu trúc thư mục Maven *
+## 1. Cấu trúc thư mục Maven 
 Sử dụng công cụ để khởi tạo pom.xml bao gồm thư viện mysql-connector-java.
 
-*2. Database (XAMPP / MySQL)
+## 2. Database (XAMPP / MySQL)
 Tạo file database/schema.sql với các bảng cần thiết:
 
 users (id, username, password, role)
@@ -15,7 +15,7 @@ orders (id, user_id, total_amount, status, created_at, shipping_address)
 order_items (id, order_id, product_id, quantity, price)
 promotions (id, code, discount_percent, is_active)
 (Giỏ hàng có thể xử lý in-memory khi user đang thao tác, hoặc lưu vào database)
-*3. Phân chia thư mục mã nguồn (Packages)
+## 3. Phân chia thư mục mã nguồn (Packages)
 Kiến trúc phần mềm sẽ bao gồm các tầng (Layer):
 
 model: Chứa các lớp thực thể (User, Product, Brand, Order...)
@@ -23,7 +23,7 @@ dao (Data Access Object): Xử lý các câu lệnh SQL INSERT/UPDATE/SELECT...
 service: Chứa logic nghiệp vụ (Kiểm tra đăng nhập, xác nhận mua hàng...)
 view: Giao diện Console (Menu hiển thị chữ, nhận ký tự nhập từ Scanner), bao gồm Menu Admin và Menu Customer.
 utils: File cấu hình kết nối Database (DBConnection).
-*4. Lộ trình Triển khai Code
+## 4. Lộ trình Triển khai Code
 Chúng ta sẽ cài đặt tất cả 12 usecase qua các Views: 
 Admin Flow:
 
