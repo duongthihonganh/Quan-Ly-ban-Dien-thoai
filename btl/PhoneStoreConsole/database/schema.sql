@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS phone_store_db;
+CREATE DATABASE IF NOT EXISTS phone_store_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE phone_store_db;
 
 -- Bảng phân quyền (có thể gộp vào users, nhưng để đơn giản ta dùng cột role trực tiếp)
@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS reviews (
     product_id INT,
     rating INT CHECK (rating >= 1 AND rating <= 5),
     comment TEXT,
+    admin_reply TEXT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
@@ -61,7 +62,7 @@ CREATE TABLE IF NOT EXISTS orders (
     total_amount DECIMAL(15,2) DEFAULT 0,
     discount_amount DECIMAL(15,2) DEFAULT 0,
     final_amount DECIMAL(15,2) DEFAULT 0,
-    status ENUM('PENDING', 'SHIPPED', 'DELIVERED', 'CANCELLED') DEFAULT 'PENDING',
+    status ENUM('PENDING', 'APPROVED', 'SHIPPED', 'DELIVERED', 'CANCELLED') DEFAULT 'PENDING',
     shipping_address VARCHAR(255),
     payment_method VARCHAR(50),
     promotion_id INT NULL,

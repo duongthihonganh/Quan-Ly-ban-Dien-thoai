@@ -146,4 +146,41 @@ public class OrderDAO {
         o.setCreatedAt(rs.getTimestamp("created_at"));
         return o;
     }
+    public boolean hasUserPurchasedProduct(int userId, int productId) {
+        String query = "SELECT 1 FROM orders o JOIN order_items oi ON o.id = oi.order_id " +
+                       "WHERE o.user_id = ? AND oi.product_id = ? AND o.status != 'CANCELLED'";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // True nếu có ít nhất 1 dòng kết quả
+        } catch (SQLException e) {
+            System.err.println("Lỗi kiểm tra lịch sử mua hàng: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public List<OrderItem> getOrderItemsByOrderId(int orderId) {
+        String query = "SELECT oi.*, p.name FROM order_items oi JOIN products p ON oi.product_id = p.id WHERE oi.order_id = ?";
+        List<OrderItem> list = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                OrderItem item = new OrderItem();
+                item.setId(rs.getInt("id"));
+                item.setOrderId(rs.getInt("order_id"));
+                item.setProductId(rs.getInt("product_id"));
+                item.setQuantity(rs.getInt("quantity"));
+                item.setPrice(rs.getBigDecimal("price"));
+                item.setProductName(rs.getString("name"));
+                list.add(item);
+            }
+        } catch (SQLException e) {
+            System.err.println("Lỗi lấy danh sách chi tiết đơn hàng: " + e.getMessage());
+        }
+        return list;
+    }
 }

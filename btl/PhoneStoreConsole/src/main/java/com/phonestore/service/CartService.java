@@ -53,6 +53,27 @@ public class CartService {
         }
     }
 
+    public void updateQuantity(int userId, int productId, int newQuantity) {
+        if (newQuantity <= 0) {
+            removeFromCart(userId, productId);
+            return;
+        }
+        Product p = productDAO.getProductById(productId);
+        if (p == null) {
+            System.out.println("-> Lỗi: Không tìm thấy sản phẩm.");
+            return;
+        }
+        if (p.getStock() < newQuantity) {
+            System.out.println("-> Lỗi: Chỉ có thể cập nhật tối đa " + p.getStock() + " sản phẩm (do giới hạn tồn kho).");
+            return;
+        }
+        if (cartDAO.updateCartQuantity(userId, productId, newQuantity)) {
+            System.out.println("-> Đã cập nhật số lượng thành công.");
+        } else {
+            System.out.println("-> Cập nhật thất bại. (Sản phẩm có thể chưa có trong giỏ)");
+        }
+    }
+
     public List<OrderItem> getCartList(int userId) {
         return cartDAO.getCartByUser(userId);
     }

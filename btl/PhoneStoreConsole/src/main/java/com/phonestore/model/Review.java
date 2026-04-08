@@ -29,4 +29,17 @@ public class Review {
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    private String adminReply;
+    private String userName;
+    private String productName;
+
+    public String getAdminReply() { return adminReply; }
+    public void setAdminReply(String adminReply) { this.adminReply = adminReply; }
+
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
+
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
 }

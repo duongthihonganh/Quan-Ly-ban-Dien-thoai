@@ -59,6 +59,20 @@ public class CartDAO {
         return false;
     }
 
+    public boolean updateCartQuantity(int userId, int productId, int newQuantity) {
+        String query = "UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, userId);
+            ps.setInt(3, productId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Lỗi cập nhật số lượng giỏ hàng: " + e.getMessage());
+        }
+        return false;
+    }
+
     public void clearCart(int userId) {
         String query = "DELETE FROM cart_items WHERE user_id = ?";
         try (Connection conn = DBConnection.getConnection();

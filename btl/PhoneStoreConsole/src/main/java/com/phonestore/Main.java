@@ -5,10 +5,16 @@ import com.phonestore.model.User;
 import com.phonestore.view.AdminView;
 import com.phonestore.view.CustomerView;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        // Fix encoding for Vietnamese output on Windows terminal
+        try {
+            System.setOut(new PrintStream(System.out, true, "UTF-8"));
+            System.setErr(new PrintStream(System.err, true, "UTF-8"));
+        } catch (Exception e) { /* ignore */ }
         Scanner scanner = new Scanner(System.in);
         UserDAO userDAO = new UserDAO();
 
@@ -19,7 +25,7 @@ public class Main {
         while (true) {
             System.out.println("\n--- MENU TRANG CHỦ ---");
             System.out.println("1. Đăng nhập");
-            System.out.println("2. Đăng ký Khách hàng mới");
+            System.out.println("2. Đăng ký khách hàng mới");
             System.out.println("3. Thoát hệ thống");
             System.out.print("Chọn chức năng: ");
             
