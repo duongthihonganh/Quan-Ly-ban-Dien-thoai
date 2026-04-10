@@ -130,25 +130,4 @@ public class ProductDAO {
         return p;
     }
 
-    public List<String> getTopSellingProducts(int limit) {
-        List<String> list = new ArrayList<>();
-        String query = "SELECT p.name, SUM(oi.quantity) as total_sold " +
-                       "FROM order_items oi " +
-                       "JOIN orders o ON oi.order_id = o.id " +
-                       "JOIN products p ON oi.product_id = p.id " +
-                       "WHERE o.status = 'DELIVERED' " +
-                       "GROUP BY p.id, p.name " +
-                       "ORDER BY total_sold DESC LIMIT ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setInt(1, limit);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                list.add(rs.getString("name") + " - Đã bán: " + rs.getInt("total_sold") + " chiếc");
-            }
-        } catch (SQLException e) {
-            System.err.println("Lỗi thống kê điện thoại bán chạy: " + e.getMessage());
-        }
-        return list;
-    }
 }

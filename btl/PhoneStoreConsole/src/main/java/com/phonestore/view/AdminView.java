@@ -15,6 +15,7 @@ public class AdminView {
     private OrderDAO orderDAO;
     private PromotionDAO promotionDAO;
     private ReviewDAO reviewDAO;
+    private DashboardDAO dashboardDAO;
 
     public AdminView(Scanner scanner, User admin) {
         this.scanner = scanner;
@@ -24,6 +25,7 @@ public class AdminView {
         this.orderDAO = new OrderDAO();
         this.promotionDAO = new PromotionDAO();
         this.reviewDAO = new ReviewDAO();
+        this.dashboardDAO = new DashboardDAO();
     }
 
     public void showMenu() {
@@ -162,8 +164,9 @@ public class AdminView {
             System.out.print("Nhập STT sản phẩm cần cập nhật (hoặc 0 để quay lại): ");
             try {
                 int stt = Integer.parseInt(scanner.nextLine());
-                if(stt == 0) return;
-                
+                if (stt == 0)
+                    return;
+
                 if (stt >= 1 && stt <= products.size()) {
                     Product existing = products.get(stt - 1);
                     boolean isUpdating = true;
@@ -173,19 +176,21 @@ public class AdminView {
                         System.out.println("2. Sửa Giá bán: " + existing.getPrice());
                         System.out.println("3. Sửa Tồn kho: " + existing.getStock());
                         System.out.println("4. Sửa Cấu hình (Specs): " + existing.getSpecs());
-                        System.out.println("5. Đổi ID Hãng: " + (existing.getBrandName() != null ? existing.getBrandName() : existing.getBrandId()));
+                        System.out.println("5. Đổi ID Hãng: "
+                                + (existing.getBrandName() != null ? existing.getBrandName() : existing.getBrandId()));
                         System.out.println("6. Ẩn/Hiện SP: " + existing.isActive());
                         System.out.println("9. [LƯU THAY ĐỔI VÀ THOÁT]");
                         System.out.println("0. [HỦY BỎ TẤT CẢ VÀ THOÁT]");
                         System.out.print("Chọn mục cần sửa: ");
                         String op = scanner.nextLine();
-                        
+
                         try {
                             switch (op) {
                                 case "1":
                                     System.out.print("Nhập tên mới: ");
                                     String n = scanner.nextLine();
-                                    if(!n.trim().isEmpty()) existing.setName(n);
+                                    if (!n.trim().isEmpty())
+                                        existing.setName(n);
                                     break;
                                 case "2":
                                     System.out.print("Nhập giá mới (VNĐ): ");
@@ -235,65 +240,107 @@ public class AdminView {
         }
     }
 
-    private void manageOrders() {
-        System.out.println("\n-- QUẢN LÝ ĐƠN HÀNG --");
-        List<Order> orders = orderDAO.getAllOrders();
-        for (Order o : orders) {
-            System.out.printf("Mã ĐH: %d | UserID: %d | Tổng: %s | Trạng thái: %s | Ngày: %s%n", o.getId(),
-                    o.getUserId(), o.getFinalAmount(), o.getStatus(), o.getCreatedAt());
-            List<OrderItem> items = orderDAO.getOrderItemsByOrderId(o.getId());
-            for (OrderItem item : items) {
-                System.out.printf("   -> SẢN PHẨM: %s | Số lượng: %d | Đơn giá: %s VNĐ%n", item.getProductName(), item.getQuantity(), item.getPrice());
-            }
+    private String getStatusVN(String enStatus) {
+        if (enStatus == null)
+            return "Không xác định";
+        switch (enStatus.toUpperCase()) {
+            case "PENDING":
+                return "Chờ duyệt";
+            case "APPROVED":
+                return "Đã duyệt";
+            case "SHIPPED":
+                return "Đang giao";
+            case "DELIVERED":
+                return "Đã giao";
+            case "CANCELLED":
+                return "Đã hủy";
+            default:
+                return enStatus;
         }
-        System.out.println("\n1. Duyệt đơn hàng đang chờ duyệt (PENDING)");
-        System.out.println("2. Cập nhật trạng thái giao hàng (SHIPPED / DELIVERED)");
-        System.out.println("0. Quay lại");
-        System.out.print("Chọn: ");
-        String choice = scanner.nextLine();
+    }
 
-        if ("1".equals(choice)) {
-            System.out.print("Nhập mã đơn cần duyệt: ");
-            int id = Integer.parseInt(scanner.nextLine());
-            System.out.print("Quyết định: Chấp nhận (A) / Hủy bỏ (C): ");
-            String decision = scanner.nextLine().trim().toUpperCase();
-            String status = decision.equals("A") ? "APPROVED" : (decision.equals("C") ? "CANCELLED" : "");
-            
-            if (!status.isEmpty() && orderDAO.updateOrderStatus(id, status)) {
-                System.out.println("Đã duyệt đơn thành công! (Trạng thái: " + status + ")");
-            } else {
-                System.out.println("Duyệt đơn thất bại hoặc lựa chọn không hợp lệ.");
-            }
-        } else if ("2".equals(choice)) {
-            System.out.print("Nhập mã đơn cần cập nhật: ");
-            int id = Integer.parseInt(scanner.nextLine());
-            
-            Order targetOrder = null;
+    private void manageOrders() {
+        while (true) {
+            System.out.println("\n-- QUẢN LÝ ĐƠN HÀNG --");
+            List<Order> orders = orderDAO.getAllOrders();
             for (Order o : orders) {
-                if (o.getId() == id) {
-                    targetOrder = o;
-                    break;
+                System.out.printf("Mã ĐH: %d | UserID: %d | Tổng: %s | Trạng thái: %s | Ngày: %s%n", o.getId(),
+                        o.getUserId(), o.getFinalAmount(), getStatusVN(o.getStatus()), o.getCreatedAt());
+                List<OrderItem> items = orderDAO.getOrderItemsByOrderId(o.getId());
+                for (OrderItem item : items) {
+                    System.out.printf("   -> SẢN PHẨM: %s | Số lượng: %d | Đơn giá: %s VNĐ%n", item.getProductName(),
+                            item.getQuantity(), item.getPrice());
                 }
             }
-            
-            if (targetOrder == null) {
-                System.out.println("Không tìm thấy mã đơn hàng này!");
-            } else if ("PENDING".equals(targetOrder.getStatus())) {
-                System.out.println("LỖI: Đơn hàng này CHƯA ĐƯỢC DUYỆT! Bạn phải duyệt đơn (Chọn chức năng 1) trước khi giao hàng.");
-            } else if ("CANCELLED".equals(targetOrder.getStatus())) {
-                System.out.println("LỖI: Đơn hàng này đã bị HỦY BỎ, không thể giao hàng.");
-            } else {
-                System.out.print("Trạng thái mới giao hàng (SHIPPED / DELIVERED): ");
-                String status = scanner.nextLine().trim().toUpperCase();
-                if (status.equals("SHIPPED") || status.equals("DELIVERED")) {
-                    if (orderDAO.updateOrderStatus(id, status)) {
-                        System.out.println("Cập nhật giao hàng thành công!");
+            System.out.println("\n1. Duyệt đơn hàng đang chờ duyệt");
+            System.out.println("2. Cập nhật trạng thái giao hàng (ĐANG GIAO / ĐÃ GIAO)");
+            System.out.println("0. Quay lại");
+            System.out.print("Chọn: ");
+            String choice = scanner.nextLine();
+
+            if ("1".equals(choice)) {
+                System.out.print("Nhập mã đơn cần duyệt: ");
+                try {
+                    int id = Integer.parseInt(scanner.nextLine());
+                    System.out.print("Quyết định: Chấp nhận (A) / Hủy bỏ (C): ");
+                    String decision = scanner.nextLine().trim().toUpperCase();
+                    String status = decision.equals("A") ? "APPROVED" : (decision.equals("C") ? "CANCELLED" : "");
+
+                    if (!status.isEmpty() && orderDAO.updateOrderStatus(id, status)) {
+                        System.out.println("Đã duyệt đơn thành công!");
                     } else {
-                        System.out.println("Cập nhật thất bại.");
+                        System.out.println("Duyệt đơn thất bại hoặc lựa chọn không hợp lệ.");
                     }
-                } else {
-                    System.out.println("Trạng thái không hợp lệ! Vui lòng nhập SHIPPED hoặc DELIVERED.");
+                } catch (NumberFormatException e) {
+                    System.out.println(">> Vui lòng nhập số hợp lệ.");
                 }
+            } else if ("2".equals(choice)) {
+                System.out.print("Nhập mã đơn cần cập nhật: ");
+                try {
+                    int id = Integer.parseInt(scanner.nextLine());
+
+                    Order targetOrder = null;
+                    for (Order o : orders) {
+                        if (o.getId() == id) {
+                            targetOrder = o;
+                            break;
+                        }
+                    }
+
+                    if (targetOrder == null) {
+                        System.out.println("Không tìm thấy mã đơn hàng này!");
+                    } else if ("PENDING".equals(targetOrder.getStatus())) {
+                        System.out.println(
+                                "LỖI: Đơn hàng này CHƯA ĐƯỢC DUYỆT! Bạn phải duyệt đơn trước khi giao hàng.");
+                    } else if ("CANCELLED".equals(targetOrder.getStatus())) {
+                        System.out.println("LỖI: Đơn hàng này đã bị HỦY BỎ, không thể giao hàng.");
+                    } else {
+                        System.out.print("Trạng thái mới giao hàng (ĐANG GIAO / ĐÃ GIAO): ");
+                        String inputStatus = scanner.nextLine().trim().toUpperCase();
+                        String status = "";
+                        if (inputStatus.equals("ĐANG GIAO") || inputStatus.equals("DANG GIAO")) {
+                            status = "SHIPPED";
+                        } else if (inputStatus.equals("ĐÃ GIAO") || inputStatus.equals("DA GIAO")) {
+                            status = "DELIVERED";
+                        }
+
+                        if (!status.isEmpty()) {
+                            if (orderDAO.updateOrderStatus(id, status)) {
+                                System.out.println("Cập nhật giao hàng thành công!");
+                            } else {
+                                System.out.println("Cập nhật thất bại.");
+                            }
+                        } else {
+                            System.out.println("Trạng thái không hợp lệ! Vui lòng nhập ĐANG GIAO hoặc ĐÃ GIAO.");
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(">> Vui lòng nhập số hợp lệ.");
+                }
+            } else if ("0".equals(choice)) {
+                return;
+            } else {
+                System.out.println("Lựa chọn không hợp lệ.");
             }
         }
     }
@@ -325,27 +372,14 @@ public class AdminView {
 
     private void showDashboard() {
         System.out.println("\n-- BẢNG THỐNG KÊ (DASHBOARD) --");
-        // Simplified dashboard querying via standard orders
-        List<Order> orders = orderDAO.getAllOrders();
-        BigDecimal totalRevenue = BigDecimal.ZERO;
-        int completedOrders = 0;
-        int currentPending = 0;
+        Dashboard stats = dashboardDAO.getDashboardStats();
 
-        for (Order o : orders) {
-            if ("DELIVERED".equals(o.getStatus())) {
-                totalRevenue = totalRevenue.add(o.getFinalAmount());
-                completedOrders++;
-            } else if ("PENDING".equals(o.getStatus())) {
-                currentPending++;
-            }
-        }
-
-        System.out.println("Tổng doanh thu (Đã giao hàng): " + totalRevenue + " VNĐ");
-        System.out.println("Số đơn hàng đã hoàn thành: " + completedOrders);
-        System.out.println("Số đơn đang chờ duyệt: " + currentPending);
+        System.out.println("Tổng doanh thu: " + stats.getTotalRevenue() + " VNĐ");
+        System.out.println("Số đơn hàng đã hoàn thành: " + stats.getCompletedOrders());
+        System.out.println("Số đơn đang chờ duyệt: " + stats.getPendingOrders());
 
         System.out.println("\n--- TOP ĐIỆN THOẠI BÁN CHẠY NHẤT ---");
-        List<String> topSelling = productDAO.getTopSellingProducts(5);
+        List<String> topSelling = stats.getTopSellingProducts();
         if (topSelling.isEmpty()) {
             System.out.println("Chưa có dữ liệu giao hàng thành công.");
         } else {
@@ -365,8 +399,9 @@ public class AdminView {
             System.out.println("Chưa có đánh giá nào.");
         } else {
             for (Review r : reviews) {
-                System.out.printf("[%d] SP: %s | KH: %s | Đánh giá: %d sao | Nội dung: %s%n", r.getId(), r.getProductName(), r.getUserName(), r.getRating(), r.getComment());
-                if(r.getAdminReply() != null && !r.getAdminReply().isEmpty()) {
+                System.out.printf("[%d] SP: %s | KH: %s | Đánh giá: %d sao | Nội dung: %s%n", r.getId(),
+                        r.getProductName(), r.getUserName(), r.getRating(), r.getComment());
+                if (r.getAdminReply() != null && !r.getAdminReply().isEmpty()) {
                     System.out.println("    => Lời phản hồi: " + r.getAdminReply());
                 }
             }
@@ -378,7 +413,7 @@ public class AdminView {
             int rId = Integer.parseInt(scanner.nextLine());
             System.out.print("Nhập nội dung phản hồi: ");
             String reply = scanner.nextLine();
-            if(reviewDAO.replyReview(rId, reply)) {
+            if (reviewDAO.replyReview(rId, reply)) {
                 System.out.println("Phản hồi thành công!");
             } else {
                 System.out.println("Phản hồi thất bại.");

@@ -1,12 +1,14 @@
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\Main.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\BrandDAO.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\CartDAO.java
+C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\DashboardDAO.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\OrderDAO.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\ProductDAO.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\PromotionDAO.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\ReviewDAO.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\dao\UserDAO.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\model\Brand.java
+C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\model\Dashboard.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\model\Order.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\model\OrderItem.java
 C:\btl\PhoneStoreConsole\src\main\java\com\phonestore\model\Product.java

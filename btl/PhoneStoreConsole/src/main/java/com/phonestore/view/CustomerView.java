@@ -32,7 +32,7 @@ public class CustomerView {
             System.out.println("\n=== CỬA HÀNG ĐIỆN THOẠI ===");
             System.out.println("1. Xem tất cả sản phẩm");
             System.out.println("2. Tìm kiếm sản phẩm");
-            System.out.println("3. Xem chi tiết & Đánh giá SP");
+            System.out.println("3. Đánh giá sản phẩm");
             System.out.println("4. Xem Giỏ hàng (" + cartService.getCartList(customer.getId()).size() + ")");
             System.out.println("5. Lịch sử mua hàng");
             System.out.println("0. Đăng xuất");
@@ -42,7 +42,7 @@ public class CustomerView {
             switch (choice) {
                 case "1": browseProducts(); break;
                 case "2": searchProducts(); break;
-                case "3": viewProductDetails(); break;
+                case "3": evaluateProduct(); break;
                 case "4": manageCart(); break;
                 case "5": orderHistory(); break;
                 case "0":
@@ -71,33 +71,48 @@ public class CustomerView {
             }
             Product p = products.get(pIndex - 1);
             int pId = p.getId();
-            System.out.println("Bạn đã chọn: " + p.getName() + " - Giá: " + p.getPrice() + " VNĐ");
-            System.out.println("1. Thêm vào giỏ hàng");
-            System.out.println("2. Mua ngay (Thanh toán trực tiếp)");
-            System.out.println("0. Hủy");
-            System.out.print("Lựa chọn: ");
-            String choose = scanner.nextLine();
+            boolean dealing = true;
+            while (dealing) {
+                System.out.println("\nBạn đang chọn: " + p.getName() + " - Giá: " + p.getPrice() + " VNĐ");
+                System.out.println("1. Xem chi tiết sản phẩm");
+                System.out.println("2. Thêm vào giỏ hàng");
+                System.out.println("3. Mua ngay (Thanh toán trực tiếp)");
+                System.out.println("0. Hủy");
+                System.out.print("Lựa chọn: ");
+                String choose = scanner.nextLine();
 
-            if ("1".equals(choose)) {
-                System.out.print("Số lượng: ");
-                int qty = Integer.parseInt(scanner.nextLine());
-                cartService.addToCart(customer.getId(), pId, qty);
-            } else if ("2".equals(choose)) {
-                System.out.print("Số lượng mua ngay: ");
-                int qty = Integer.parseInt(scanner.nextLine());
-                if (qty > p.getStock()) {
-                    System.out.println("Kho không đủ hàng (Chỉ còn " + p.getStock() + " chiếc).");
-                } else if (qty > 0) {
-                    List<OrderItem> buyNowItems = new java.util.ArrayList<>();
-                    OrderItem item = new OrderItem();
-                    item.setProductId(p.getId());
-                    item.setProductName(p.getName());
-                    item.setPrice(p.getPrice());
-                    item.setQuantity(qty);
-                    buyNowItems.add(item);
-                    
-                    BigDecimal total = p.getPrice().multiply(new BigDecimal(qty));
-                    checkout(total, buyNowItems, true);
+                if ("1".equals(choose)) {
+                    System.out.println("\n--- CHI TIẾT SẢN PHẨM ---");
+                    System.out.println("Tên: " + p.getName());
+                    System.out.println("Giá: " + p.getPrice() + " VNĐ");
+                    System.out.println("Cấu hình: " + p.getSpecs());
+                    System.out.println("Tồn kho: " + p.getStock());
+                    System.out.println("-------------------------");
+                } else if ("2".equals(choose)) {
+                    System.out.print("Số lượng: ");
+                    int qty = Integer.parseInt(scanner.nextLine());
+                    cartService.addToCart(customer.getId(), pId, qty);
+                    dealing = false;
+                } else if ("3".equals(choose)) {
+                    System.out.print("Số lượng mua ngay: ");
+                    int qty = Integer.parseInt(scanner.nextLine());
+                    if (qty > p.getStock()) {
+                        System.out.println("Kho không đủ hàng (Chỉ còn " + p.getStock() + " chiếc).");
+                    } else if (qty > 0) {
+                        List<OrderItem> buyNowItems = new java.util.ArrayList<>();
+                        OrderItem item = new OrderItem();
+                        item.setProductId(p.getId());
+                        item.setProductName(p.getName());
+                        item.setPrice(p.getPrice());
+                        item.setQuantity(qty);
+                        buyNowItems.add(item);
+                        
+                        BigDecimal total = p.getPrice().multiply(new BigDecimal(qty));
+                        checkout(total, buyNowItems, true);
+                    }
+                    dealing = false;
+                } else {
+                    dealing = false;
                 }
             }
         }
@@ -151,58 +166,68 @@ public class CustomerView {
                 }
                 Product p = products.get(pIndex - 1);
                 int pId = p.getId();
-                System.out.println("Bạn đã chọn: " + p.getName() + " - Giá: " + p.getPrice() + " VNĐ");
-                System.out.println("1. Thêm vào giỏ hàng");
-                System.out.println("2. Mua ngay (Thanh toán trực tiếp)");
-                System.out.println("0. Hủy");
-                System.out.print("Lựa chọn: ");
-                String choose = scanner.nextLine();
+                boolean dealing = true;
+                while (dealing) {
+                    System.out.println("\nBạn đang chọn: " + p.getName() + " - Giá: " + p.getPrice() + " VNĐ");
+                    System.out.println("1. Xem chi tiết sản phẩm");
+                    System.out.println("2. Thêm vào giỏ hàng");
+                    System.out.println("3. Mua ngay (Thanh toán trực tiếp)");
+                    System.out.println("0. Hủy");
+                    System.out.print("Lựa chọn: ");
+                    String choose = scanner.nextLine();
 
-                if ("1".equals(choose)) {
-                    System.out.print("Số lượng: ");
-                    int qty = Integer.parseInt(scanner.nextLine());
-                    cartService.addToCart(customer.getId(), pId, qty);
-                } else if ("2".equals(choose)) {
-                    System.out.print("Số lượng mua ngay: ");
-                    int qty = Integer.parseInt(scanner.nextLine());
-                    if (qty > p.getStock()) {
-                        System.out.println("Kho không đủ hàng (Chỉ còn " + p.getStock() + " chiếc).");
-                    } else if (qty > 0) {
-                        List<OrderItem> buyNowItems = new java.util.ArrayList<>();
-                        OrderItem item = new OrderItem();
-                        item.setProductId(p.getId());
-                        item.setProductName(p.getName());
-                        item.setPrice(p.getPrice());
-                        item.setQuantity(qty);
-                        buyNowItems.add(item);
-                        
-                        BigDecimal total = p.getPrice().multiply(new BigDecimal(qty));
-                        checkout(total, buyNowItems, true);
+                    if ("1".equals(choose)) {
+                        System.out.println("\n--- CHI TIẾT SẢN PHẨM ---");
+                        System.out.println("Tên: " + p.getName());
+                        System.out.println("Giá: " + p.getPrice() + " VNĐ");
+                        System.out.println("Cấu hình: " + p.getSpecs());
+                        System.out.println("Tồn kho: " + p.getStock());
+                        System.out.println("-------------------------");
+                    } else if ("2".equals(choose)) {
+                        System.out.print("Số lượng: ");
+                        int qty = Integer.parseInt(scanner.nextLine());
+                        cartService.addToCart(customer.getId(), pId, qty);
+                        dealing = false;
+                    } else if ("3".equals(choose)) {
+                        System.out.print("Số lượng mua ngay: ");
+                        int qty = Integer.parseInt(scanner.nextLine());
+                        if (qty > p.getStock()) {
+                            System.out.println("Kho không đủ hàng (Chỉ còn " + p.getStock() + " chiếc).");
+                        } else if (qty > 0) {
+                            List<OrderItem> buyNowItems = new java.util.ArrayList<>();
+                            OrderItem item = new OrderItem();
+                            item.setProductId(p.getId());
+                            item.setProductName(p.getName());
+                            item.setPrice(p.getPrice());
+                            item.setQuantity(qty);
+                            buyNowItems.add(item);
+                            
+                            BigDecimal total = p.getPrice().multiply(new BigDecimal(qty));
+                            checkout(total, buyNowItems, true);
+                        }
+                        dealing = false;
+                    } else {
+                        dealing = false;
                     }
                 }
             }
         }
     }
 
-    private void viewProductDetails() {
-        System.out.println("\n-- DANH SÁCH SẢN PHẨM --");
+    private void evaluateProduct() {
+        System.out.println("\n-- ĐÁNH GIÁ SẢN PHẨM --");
         List<Product> products = productDAO.getAllProducts();
         for (int i = 0; i < products.size(); i++) {
             Product p = products.get(i);
             System.out.printf("[%d] %s%n", i + 1, p.getName());
         }
-        System.out.print("Nhập STT Sản phẩm để xem chi tiết: ");
+        System.out.print("Nhập STT Sản phẩm để xem & viết đánh giá (0 để quay lại): ");
         int pIndex = Integer.parseInt(scanner.nextLine());
         if (pIndex >= 1 && pIndex <= products.size()) {
             Product p = products.get(pIndex - 1);
             int pId = p.getId();
-            System.out.println("\n--- Chi tiết ---");
-            System.out.println("Tên: " + p.getName());
-            System.out.println("Giá: " + p.getPrice());
-            System.out.println("Cấu hình: " + p.getSpecs());
-            System.out.println("Tồn kho: " + p.getStock());
             
-            System.out.println("\n[ Đánh giá của khách hàng ]");
+            System.out.println("\n[ Đánh giá của khách hàng về " + p.getName() + " ]");
             List<Review> reviews = reviewDAO.getReviewsByProduct(pId);
             if (reviews.isEmpty()) System.out.println("(Chưa có đánh giá nào)");
             for (Review r : reviews) {
@@ -213,7 +238,7 @@ public class CustomerView {
                 }
             }
 
-            System.out.println("\n1. Đánh giá | 2. Thêm vào giỏ | 0. Thoát");
+            System.out.println("\n1. Viết đánh giá cho sản phẩm này | 0. Thoát");
             String c = scanner.nextLine();
             if ("1".equals(c)) {
                 if (orderDAO.hasUserPurchasedProduct(customer.getId(), pId)) {
@@ -226,9 +251,6 @@ public class CustomerView {
                 } else {
                     System.out.println("LỖI: Bạn phải mua sản phẩm này rồi mới có thể để lại đánh giá!");
                 }
-            } else if ("2".equals(c)) {
-                System.out.print("Số lượng: "); int qty = Integer.parseInt(scanner.nextLine());
-                cartService.addToCart(customer.getId(), pId, qty);
             }
         }
     }
