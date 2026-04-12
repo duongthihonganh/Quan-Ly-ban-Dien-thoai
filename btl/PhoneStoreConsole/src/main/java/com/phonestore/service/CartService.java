@@ -39,7 +39,7 @@ public class CartService {
         }
 
         if (cartDAO.addToCart(userId, productId, quantity)) {
-            System.out.println("-> Đã thêm " + p.getName() + " vào giỏ hàng vĩnh viễn.");
+            System.out.println("-> Đã thêm " + p.getName() + " vào giỏ hàng.");
         } else {
             System.out.println("-> Có lỗi xảy ra khi thêm vào giỏ.");
         }
