@@ -62,7 +62,7 @@ public class AdminView {
                     break;
                 case "0":
                     System.out.println("Đã đăng xuất khỏi tài khoản admin.");
-                    return; // Về màn hình đăng nhập
+                    return;
                 default:
                     System.out.println("Chức năng không hợp lệ!");
             }

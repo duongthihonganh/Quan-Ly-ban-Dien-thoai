@@ -19,9 +19,8 @@ public class OrderDAO {
         if (conn == null) return orderId;
 
         try {
-            conn.setAutoCommit(false); // Transaction
+            conn.setAutoCommit(false);
 
-            // 1. Insert Order
             try (PreparedStatement ps = conn.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, order.getUserId());
                 ps.setBigDecimal(2, order.getTotalAmount());
@@ -43,7 +42,6 @@ public class OrderDAO {
                 }
             }
 
-            // 2. Insert Order Items and Update Stock
             if (orderId != -1) {
                 String updateStock = "UPDATE products SET stock = stock - ? WHERE id = ?";
                 try (PreparedStatement psItem = conn.prepareStatement(insertItem);
@@ -54,8 +52,7 @@ public class OrderDAO {
                         psItem.setInt(3, item.getQuantity());
                         psItem.setBigDecimal(4, item.getPrice());
                         psItem.addBatch();
-                        
-                        // Update stock
+
                         psStock.setInt(1, item.getQuantity());
                         psStock.setInt(2, item.getProductId());
                         psStock.addBatch();
@@ -154,7 +151,7 @@ public class OrderDAO {
             ps.setInt(1, userId);
             ps.setInt(2, productId);
             ResultSet rs = ps.executeQuery();
-            return rs.next(); // True nếu có ít nhất 1 dòng kết quả
+            return rs.next();
         } catch (SQLException e) {
             System.err.println("Lỗi kiểm tra lịch sử mua hàng: " + e.getMessage());
         }

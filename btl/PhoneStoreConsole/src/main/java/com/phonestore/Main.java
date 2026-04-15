@@ -10,11 +10,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Fix encoding for Vietnamese output on Windows terminal
         try {
             System.setOut(new PrintStream(System.out, true, "UTF-8"));
             System.setErr(new PrintStream(System.err, true, "UTF-8"));
-        } catch (Exception e) { /* ignore */ }
+        } catch (Exception e) {}
         Scanner scanner = new Scanner(System.in);
         UserDAO userDAO = new UserDAO();
 
@@ -69,8 +68,18 @@ public class Main {
 
     private static void handleRegister(Scanner scanner, UserDAO userDAO) {
         System.out.println("\n--- ĐĂNG KÝ TÀI KHOẢN KHÁCH HÀNG ---");
-        System.out.print("Tên đăng nhập mới: ");
-        String username = scanner.nextLine();
+
+        String username;
+        do {
+            System.out.print("Tên đăng nhập mới: ");
+            username = scanner.nextLine();
+            if (userDAO.isUsernameExists(username)) {
+                System.out.println("=> Tên đăng nhập \"" + username + "\" đã tồn tại! Vui lòng chọn tên khác.");
+            } else {
+                break;
+            }
+        } while (true);
+
         System.out.print("Mật khẩu: ");
         String password = scanner.nextLine();
         System.out.print("Họ và tên: ");

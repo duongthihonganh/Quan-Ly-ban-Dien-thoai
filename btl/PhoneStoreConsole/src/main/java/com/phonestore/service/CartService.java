@@ -23,7 +23,6 @@ public class CartService {
             return;
         }
 
-        // Kiểm tra tồn kho trước khi thêm
         List<OrderItem> currentCart = cartDAO.getCartByUser(userId);
         int currentQty = 0;
         for (OrderItem item : currentCart) {
@@ -39,7 +38,7 @@ public class CartService {
         }
 
         if (cartDAO.addToCart(userId, productId, quantity)) {
-            System.out.println("-> Đã thêm " + p.getName() + " vào giỏ hàng.");
+            System.out.println("-> Đã thêm " + p.getName() + " vào giỏ hàng vĩnh viễn.");
         } else {
             System.out.println("-> Có lỗi xảy ra khi thêm vào giỏ.");
         }

@@ -13,7 +13,6 @@ public class Product {
     private boolean isActive;
     private Timestamp createdAt;
 
-    // Optional: for joining brand name
     private String brandName;
 
     public Product() {}

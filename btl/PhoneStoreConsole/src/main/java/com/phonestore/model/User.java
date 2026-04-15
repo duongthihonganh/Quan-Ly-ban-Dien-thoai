@@ -6,7 +6,7 @@ public class User {
     private int id;
     private String username;
     private String password;
-    private String role; // ADMIN or CUSTOMER
+    private String role;
     private String fullName;
     private String phone;
     private String address;

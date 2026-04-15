@@ -52,7 +52,6 @@ public class ReviewDAO {
         r.setProductId(rs.getInt("product_id"));
         r.setRating(rs.getInt("rating"));
         r.setComment(rs.getString("comment"));
-        // Try to get admin_reply safely since we just altered the table
         try { r.setAdminReply(rs.getString("admin_reply")); } catch (Exception ignored) {}
         r.setCreatedAt(rs.getTimestamp("created_at"));
         return r;
